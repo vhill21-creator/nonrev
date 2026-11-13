@@ -359,3 +359,9 @@ h1 em,h2 em{font-family:var(--font-display);font-weight:500;letter-spacing:-.04e
   .artist-social-actions .btn{justify-content:space-between;width:100%}
 }
 @media(max-width:400px){.featured-single{gap:14px}.featured-single>img{width:90px;height:90px}}
+
+/* Original Nonrev white wordmark in the site footer */
+.footer-logo-link{display:inline-block;max-width:100%;line-height:0;margin-bottom:25px}
+.footer-logo-img{display:block;width:min(270px,100%);height:auto;object-fit:contain}
+.footer-logo-link:focus-visible{outline:2px solid #fff;outline-offset:5px}
+@media(max-width:600px){.footer-logo-img{width:min(245px,100%)}}
