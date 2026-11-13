@@ -11,14 +11,19 @@ const json = (data, status = 200) => new Response(JSON.stringify(data), {
 
 export async function onRequestPost({ request, env }) {
   const origin = request.headers.get('Origin');
-  if (origin && origin !== new URL(request.url).origin) {
+  if (origin !== new URL(request.url).origin) {
     return json({ error: 'Invalid request origin.' }, 403);
   }
   if (Number(request.headers.get('content-length') || 0) > 16000) {
     return json({ error: 'Message too large.' }, 413);
   }
+  if (!request.headers.get('content-type')?.toLowerCase().startsWith('application/json')) return json({ error: 'JSON is required.' }, 415);
   let body;
-  try { body = await request.json(); } catch { return json({ error: 'Invalid form data.' }, 400); }
+  try {
+    const raw = await request.text();
+    if (raw.length > 16000) return json({ error: 'Message too large.' }, 413);
+    body = JSON.parse(raw);
+  } catch { return json({ error: 'Invalid form data.' }, 400); }
   if (!body || typeof body !== 'object') return json({ error: 'Invalid form data.' }, 400);
   // A hidden field discourages automated spam.
   if (body.website) return json({ ok: true });
@@ -27,7 +32,7 @@ export async function onRequestPost({ request, env }) {
   const email = clean(body.email, 160);
   const topic = clean(body.topic, 80);
   const message = clean(body.message, 5000);
-  const allowed = new Set(['Music inquiry', 'Collaboration', 'Booking or event', 'General question']);
+  const allowed = new Set(['Music production', 'Music publishing', 'Artist development', 'Collaboration', 'Booking or event', 'General question', 'Music inquiry']);
   if (name.length < 2 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !allowed.has(topic) || message.length < 10) {
     return json({ error: 'Please complete all required fields.' }, 400);
   }
