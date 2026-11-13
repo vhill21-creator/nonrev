@@ -1,0 +1,66 @@
+# Nonrev Christian Music website
+
+Responsive, seven-page static website for Cloudflare Pages. No Node build or paid web hosting is required.
+
+## Pages
+
+1. `public/index.html` – Home
+2. `public/about.html` – About Nonrev
+3. `public/music.html` – Music catalog
+4. `public/artists.html` – Artists and collaborators
+5. `public/videos.html` – Videos
+6. `public/prayer.html` – Prayer music
+7. `public/contact.html` – Contact
+
+There is also a `public/404.html` error page.
+
+## Publish with Cloudflare Pages and GitHub
+
+1. Create or open your **correct GitHub repository**. Push the contents of this folder to the repository root, preserving the `public/` and `functions/` directories.
+2. In Cloudflare, choose **Workers & Pages**, then **Create**, then **Pages**, then **Connect to Git**. Select your repository and branch.
+3. For this plain HTML version, use **no framework**, leave the build command blank and set the output directory to `public`. Cloudflare Pages should detect `public/index.html`.
+4. Deploy. Your site will have a Cloudflare Pages address. Verify all seven links, the YouTube video, the contact email link and the mobile menu.
+5. Use **Custom domains** inside that Pages project to connect a domain you own and configure DNS as prompted.
+6. When your domain is confirmed, consider adding canonical tags and a sitemap using that actual public domain.
+
+You can also upload the static files using Cloudflare Pages Direct Upload, but the `functions/` directory should be deployed through a compatible workflow if you want the server form to work.
+
+## Contact form
+
+`contact.html` includes a contact form. On Cloudflare Pages, `functions/api/contact.js` can send messages through Resend once you:
+
+1. Have a verified sending domain in Resend.
+2. Set these Cloudflare Pages environment variables:
+   - `RESEND_API_KEY`: an API key stored as a secret.
+   - `CONTACT_FROM`: a verified sender address such as `Nonrev <contact@YOUR_VERIFIED_DOMAIN>`.
+   - `CONTACT_TO`: the inbox to receive messages, for example `info@nonrevchristianmusic.com`.
+3. Redeploy, then send a test message. Use Cloudflare security settings or Turnstile if spam becomes an issue.
+
+Before these variables are configured, the form opens the visitor's email application with a prepared message. The direct `mailto:` link also works.
+
+## Content and media
+
+Images and logos reference publicly served URLs from the connected **Nonrev Christian Music** Wix media library. This preserves existing assets and keeps this package small. They are not bundled locally; they need internet access and will depend on Wix media URLs remaining available. If you want total independence from Wix, download authorized original images, optimize them to AVIF/WebP, store them under `assets/`, and update image references.
+
+This is an original responsive implementation using confirmed Nonrev branding and content. The supplied `nonrevcreate` Wix URL could not be inspected; it is not a pixel-for-pixel export of that layout. The connected Wix account has a published `/nonrev` site; those assets were used as the reference.
+
+## Maintainer notes
+
+- Styles: `public/assets/styles.css`
+- Shared behaviors: `public/assets/site.js`
+- Form: `functions/api/contact.js`
+- No paid font packages, no JavaScript frameworks, no build dependencies.
+- Do not commit API keys, passwords or domain registrar tokens.
+- Review external music links and text before launch.
+
+# Site content map
+
+**Home:** Brand introduction, featured releases, purpose, video teaser, contact CTA.  
+**About:** Mission, founder Vernon Hill, core values.  
+**Music:** Unshaken, Songs from His Presence, Great Joy, God of Wonders.  
+**Artists:** Vernon Hill, LaVarn Gordon, Taylor Simone Butts, Keon Jones, Jemila Richardson.  
+**Videos:** Give You Glory behind the song and links to the official Nonrev YouTube channel.  
+**Prayer Room:** Overview and a link to prayer music content.  
+**Contact:** Contact information and a form with email fallback.
+
+All links and assets should be verified in the published Cloudflare domain.
