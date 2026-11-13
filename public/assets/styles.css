@@ -335,3 +335,27 @@ h1 em,h2 em{font-family:var(--font-display);font-weight:500;letter-spacing:-.04e
 .page-home .hero,.page-home .hero-layout{min-height:825px}
 .page-home .hero h1{font-size:43px}
 }
+
+/* Featured music and artist portraits */
+.release-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+.featured-artist-block{margin-top:105px;padding-top:64px;border-top:1px solid #d8d5cf;scroll-margin-top:105px}
+.featured-artist-block .artist-feature-photo{height:560px}
+.featured-artist-block .otisia-portrait{object-position:center 30%}
+.featured-single{display:flex;align-items:center;gap:22px;border-top:1px solid #d8d5cf;border-bottom:1px solid #d8d5cf;padding:22px 0;margin-top:28px}
+.featured-single>img{width:125px;height:125px;object-fit:cover;flex:none}
+.featured-single h3{font:800 24px/1.1 var(--font-title);margin:10px 0 7px;letter-spacing:-.03em}
+.featured-single p{font-size:13px;line-height:1.45;margin:0 0 12px}
+.featured-single .text-link{font-size:10px}
+.artist-social-actions{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:27px}
+.artist-social-actions .btn{font-size:10px;gap:10px}
+#god-of-wonders{scroll-margin-top:115px}
+@media(max-width:1200px){.release-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:740px){
+  .release-grid{grid-template-columns:1fr}
+  .featured-artist-block{margin-top:80px;padding-top:45px}
+  .featured-artist-block .artist-feature-photo{height:440px}
+  .featured-single>img{width:100px;height:100px}
+  .artist-social-actions{flex-direction:column;align-items:stretch}
+  .artist-social-actions .btn{justify-content:space-between;width:100%}
+}
+@media(max-width:400px){.featured-single{gap:14px}.featured-single>img{width:90px;height:90px}}
