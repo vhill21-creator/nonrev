@@ -21,6 +21,28 @@
     document.addEventListener('keydown', event => { if (event.key === 'Escape') setOpen(false); });
     document.addEventListener('click', event => { if (!header.contains(event.target)) setOpen(false); });
   }
+  // Only apply prevalidated plain text and media URLs. Never insert editable HTML.
+  if (document.querySelector('[data-edit-key], [data-edit-image], [data-edit-youtube]')) {
+    fetch('/api/content', { credentials: 'same-origin' })
+      .then(response => response.ok ? response.json() : { values: {} })
+      .then(({ values = {} }) => {
+        document.querySelectorAll('[data-edit-key]').forEach(node => {
+          const value = values[node.getAttribute('data-edit-key')];
+          if (typeof value === 'string' && value) node.textContent = value;
+        });
+        document.querySelectorAll('img[data-edit-image]').forEach(node => {
+          const url = values[node.getAttribute('data-edit-image')];
+          if (typeof url === 'string' && /^https:\/\/static\.wixstatic\.com\/media\/[A-Za-z0-9_.~-]+$/.test(url)) node.src = url;
+        });
+        document.querySelectorAll('[data-edit-youtube]').forEach(node => {
+          const id = values[node.getAttribute('data-edit-youtube')];
+          if (typeof id !== 'string' || !/^[A-Za-z0-9_-]{11}$/.test(id)) return;
+          if (node.tagName === 'IFRAME') node.src = 'https://www.youtube-nocookie.com/embed/' + id;
+          if (node.tagName === 'A') node.href = 'https://www.youtube.com/watch?v=' + id;
+        });
+      }).catch(() => {});
+  }
+
   document.querySelectorAll('[data-year]').forEach(el => { el.textContent = String(new Date().getFullYear()); });
   const form = document.getElementById('contact-form');
   if (form) {

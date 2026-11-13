@@ -2,6 +2,7 @@
 // Serve the HTML pages from ./public, and handle /api/contact using the
 // existing validated email handler shared with the Pages deployment format.
 import { onRequestPost } from '../functions/api/contact.js';
+import { publicContent, adminRoute } from './content-editor.js';
 
 const json = (value, status, extra = {}) => new Response(JSON.stringify(value), {
   status,
@@ -25,6 +26,15 @@ export default {
       }
       return onRequestPost({ request, env, ctx });
     }
+
+    if (url.pathname === '/api/content') {
+      if (request.method !== 'GET') return json({ error: 'Method not allowed' }, 405, { Allow: 'GET' });
+      return publicContent(env);
+    }
+    if (url.pathname === '/admin' || url.pathname.startsWith('/admin/') || url.pathname.startsWith('/api/admin/')) {
+      return adminRoute(request, env);
+    }
+    if (url.pathname.startsWith('/api/')) return json({ error: 'Not found' }, 404);
 
     // The binding handles the seven HTML pages, CSS, JS, robots.txt, and 404.
     // Normal requests for existing static assets bypass this Worker script.
