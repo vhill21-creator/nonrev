@@ -1,0 +1,11 @@
+{
+  "name": "nonrevchristianmusic",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Nonrev Christian Music website for Cloudflare Workers Static Assets",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "deploy": "wrangler deploy"
+  }
+}
