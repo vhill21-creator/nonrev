@@ -34,6 +34,10 @@ export default {
     if (url.pathname === '/admin' || url.pathname.startsWith('/admin/') || url.pathname.startsWith('/api/admin/')) {
       return adminRoute(request, env);
     }
+    if (url.pathname === '/api/site-config') {
+      if (request.method !== 'GET') return json({ error: 'Method not allowed' }, 405, { Allow: 'GET' });
+      return json({ turnstileSiteKey: env.TURNSTILE_SITE_KEY || '' });
+    }
     if (url.pathname.startsWith('/api/')) return json({ error: 'Not found' }, 404);
 
     // The binding handles the seven HTML pages, CSS, JS, robots.txt, and 404.

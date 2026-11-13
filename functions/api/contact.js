@@ -39,6 +39,28 @@ export async function onRequestPost({ request, env }) {
   if (!env.RESEND_API_KEY || !env.CONTACT_FROM || !env.CONTACT_TO) {
     return json({ error: 'Email service not configured. Please use the email link.' }, 503);
   }
+  // Require server-verified Cloudflare Turnstile before sending outbound email.
+  // Without a configured secret the form fails closed and the browser offers the mailto fallback.
+  if (!env.TURNSTILE_SECRET) return json({ error: 'Spam protection is not configured.' }, 503);
+  const token = clean(body['cf-turnstile-response'], 2048);
+  if (!token) return json({ error: 'Please complete the security verification.' }, 403);
+  try {
+    const verifyResponse = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        secret: env.TURNSTILE_SECRET, response: token,
+        remoteip: request.headers.get('CF-Connecting-IP') || ''
+      })
+    });
+    if (!verifyResponse.ok) return json({ error: 'Security verification unavailable.' }, 503);
+    const verification = await verifyResponse.json();
+    if (!verification.success || verification.hostname !== new URL(request.url).hostname) {
+      return json({ error: 'Security verification failed.' }, 403);
+    }
+  } catch {
+    return json({ error: 'Security verification unavailable.' }, 503);
+  }
   try {
     const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',

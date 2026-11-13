@@ -46,6 +46,27 @@
   document.querySelectorAll('[data-year]').forEach(el => { el.textContent = String(new Date().getFullYear()); });
   const form = document.getElementById('contact-form');
   if (form) {
+  // Client widget is loaded only if the owner has configured the public site key.
+  fetch('/api/site-config', { credentials: 'same-origin' })
+    .then(response => response.ok ? response.json() : {})
+    .then(config => {
+      const key = config.turnstileSiteKey;
+      if (typeof key !== 'string' || !/^[A-Za-z0-9_-]{3,100}$/.test(key)) return;
+      const target = document.createElement('div');
+      target.id = 'nonrev-turnstile';
+      const button = form.querySelector('[type="submit"]');
+      button.parentElement.insertBefore(target, button);
+      const script = document.createElement('script');
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+      script.async = true;
+      script.onload = () => {
+        if (window.turnstile && typeof window.turnstile.render === 'function') {
+          window.turnstile.render(target, { sitekey: key, action: 'contact' });
+        }
+      };
+      document.head.appendChild(script);
+    }).catch(() => {});
+
     form.addEventListener('submit', async event => {
       event.preventDefault();
       const status = document.getElementById('form-status');

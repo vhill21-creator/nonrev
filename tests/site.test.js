@@ -86,3 +86,30 @@ test('Cloudflare config protects editor paths behind Worker validation', () => {
     assert.ok(config.assets.run_worker_first.includes(path));
   }
 });
+
+test('Contact endpoint accepts the current production form topics', async () => {
+  for (const topic of ['Music production', 'Music publishing', 'Artist development', 'Collaboration']) {
+    const request = new Request('https://nonrev.example/api/contact', {
+      method: 'POST', headers: { 'Content-Type': 'application/json', Origin: 'https://nonrev.example' },
+      body: JSON.stringify({ name: 'Nonrev Tester', email: 'test@example.com', topic, message: 'Please contact me about this.' })
+    });
+    const result = await worker.fetch(request, {});
+    assert.equal(result.status, 503, topic + ' should pass topic validation and reach the unconfigured mail service');
+  }
+});
+test('Contact endpoint rejects missing Origin header', async () => {
+  const request = new Request('https://nonrev.example/api/contact', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name: 'Test User', email: 'test@example.com', topic: 'Collaboration', message: 'I would like to connect.' })
+  });
+  assert.equal((await worker.fetch(request, {})).status, 403);
+});
+test('Admin is closed to requests without a verified identity when configured', async () => {
+  const request = new Request('https://nonrev.example/admin');
+  const response = await worker.fetch(request, {
+    SITE_CONTENT: { get: async () => null },
+    CF_ACCESS_TEAM_DOMAIN: 'example.cloudflareaccess.com',
+    CF_ACCESS_AUD: 'test-audience', EDITOR_EMAILS: 'owner@example.com'
+  });
+  assert.equal(response.status, 403);
+});
