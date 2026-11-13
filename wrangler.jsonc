@@ -12,5 +12,6 @@
       "/admin",
       "/admin/*"
     ]
-  }
+  },
+  "keep_vars": true
 }

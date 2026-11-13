@@ -1,0 +1,31 @@
+name: Nonrev code and security checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check syntax
+        run: |
+          node --check src/worker.js
+          node --check src/content-editor.js
+          node --check src/editor-fields.js
+          node --check functions/api/contact.js
+          node --check public/assets/site.js
+          node --check public/assets/editor.js
+      - name: Run all site tests
+        run: npm test
