@@ -365,3 +365,40 @@ h1 em,h2 em{font-family:var(--font-display);font-weight:500;letter-spacing:-.04e
 .footer-logo-img{display:block;width:min(270px,100%);height:auto;object-fit:contain}
 .footer-logo-link:focus-visible{outline:2px solid #fff;outline-offset:5px}
 @media(max-width:600px){.footer-logo-img{width:min(245px,100%)}}
+
+/* Press and News, brand consistent responsive archive */
+.nav-desktop{gap:clamp(10px,1.35vw,22px)}
+.press-hero{min-height:455px}
+.press-section{padding-bottom:100px}
+.press-toolbar{display:flex;align-items:end;flex-wrap:wrap;gap:20px;border-top:1px solid #dcd8d4;border-bottom:1px solid #dcd8d4;padding:27px 0;margin-bottom:32px}
+.press-toolbar label{display:flex;flex-direction:column;gap:8px;flex:1 1 200px;font:800 11px var(--font-title);letter-spacing:.06em;text-transform:uppercase;color:#535252}
+.press-toolbar label:first-child{flex:2 1 310px}
+.press-toolbar input,.press-toolbar select{width:100%;padding:13px 14px;min-height:48px;background:#fff;border:1px solid #cbc5c2;color:#242424;font:500 14px var(--font-body)}
+.press-toolbar input:focus-visible,.press-toolbar select:focus-visible{outline:3px solid #a83a40;outline-offset:2px}
+#press-count{font:700 12px var(--font-body);margin:0 0 13px;color:#686664}
+.press-grid,.press-home-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+.press-card{min-width:0;background:#fff;border:1px solid #e2dedb;transition:box-shadow .2s,transform .2s}
+.press-card:hover{transform:translateY(-4px);box-shadow:0 17px 32px rgba(0,0,0,.08)}
+.press-card[hidden],#press-empty[hidden]{display:none!important}
+.press-card-link{color:#151718;padding:27px;display:flex;flex-direction:column;min-height:310px}
+.press-card-top{display:flex;align-items:center;justify-content:space-between;gap:12px;color:#75706d;font:700 11px var(--font-title);margin-bottom:24px}
+.press-card-no{color:#ad3642;font-size:29px}
+.press-card h3{font:800 clamp(21px,2.1vw,27px)/1.2 var(--font-title);letter-spacing:-.035em;overflow-wrap:anywhere;margin:0 0 16px}
+.press-card p{font:400 14px/1.7 var(--font-body);color:#666;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin:0 0 22px}
+.press-read{font:800 10px var(--font-title);letter-spacing:.08em;color:#a53b43;margin-top:auto;padding-top:16px;border-top:1px solid #e0dcda}
+.press-home-section{padding:110px 0}
+.press-home-grid .press-card-link{min-height:285px}
+.press-article-hero h1{font-size:clamp(40px,5vw,73px)!important;max-width:1050px!important;overflow-wrap:break-word}
+.press-back{color:#fff;display:block;font:750 12px var(--font-title);margin-bottom:20px;text-decoration:underline}
+.press-article-layout{display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:9%;align-items:start}
+.press-article-copy{font:400 18px/1.95 var(--font-body);color:#373636;white-space:pre-line;overflow-wrap:anywhere}
+.press-source{display:flex;flex-direction:column;gap:14px;margin-top:54px;padding-top:24px;border-top:1px solid #d6d4d2}
+.press-source span{font:750 10px var(--font-title);letter-spacing:.12em}
+.press-source a{color:#953643;text-decoration:underline}
+.press-sidebar{border-left:2px solid #a83a40;padding-left:24px}
+.press-sidebar h2{font-size:31px;margin:17px 0}
+.press-sidebar h2 em{color:#a83a40}
+.press-sidebar p{font:400 14px/1.75 var(--font-body);margin-bottom:23px}
+@media(max-width:1100px){.press-grid,.press-home-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:780px){.press-article-layout{grid-template-columns:1fr;gap:60px}.press-sidebar{max-width:460px}}
+@media(max-width:640px){.press-grid,.press-home-grid{grid-template-columns:1fr}.press-home-section{padding:65px 0}.press-card-link{min-height:250px}.press-article-copy{font-size:16px}}

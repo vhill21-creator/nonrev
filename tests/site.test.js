@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import worker from '../src/worker.js';
@@ -8,7 +8,7 @@ import worker from '../src/worker.js';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const file = p => path.join(root, p);
 const config = JSON.parse(readFileSync(file('wrangler.jsonc'), 'utf8'));
-const pages = ['index', 'about', 'music', 'artists', 'videos', 'prayer', 'contact'];
+const pages = ['index', 'about', 'music', 'artists', 'videos', 'prayer', 'contact', 'press'];
 
 test('Cloudflare worker config points to deployed static files', () => {
   assert.equal(config.name, 'nonrev');
@@ -112,4 +112,20 @@ test('Admin is closed to requests without a verified identity when configured', 
     CF_ACCESS_AUD: 'test-audience', EDITOR_EMAILS: 'owner@example.com'
   });
   assert.equal(response.status, 403);
+});
+
+test('The press archive preserves all original Wix stories', () => {
+ const archive=readFileSync(file('public/press.html'),'utf8');
+ assert.equal((archive.match(/class="press-card"/g)||[]).length,38);
+ const articles=readdirSync(file('public/press')).filter(name=>name.endsWith('.html'));
+ assert.equal(articles.length,38);
+ for(const articleName of articles) {
+   const story=readFileSync(file('public/press/'+articleName),'utf8');
+   assert.ok(story.includes('href="../assets/styles.css"'));
+   assert.ok(story.includes('class="press-article-copy"'));
+ }
+});
+test('Press archive has search UI and sitemap', () => {
+ assert.ok(existsSync(file('public/assets/press.js')));
+ assert.ok(existsSync(file('public/sitemap.xml')));
 });
